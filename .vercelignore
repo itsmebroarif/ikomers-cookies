@@ -1,0 +1,10 @@
+# File khusus pengembangan lokal — tidak perlu ikut ter-deploy.
+# Situs yang di-deploy murni statis (HTML, CSS, JS, JSON, gambar).
+server.js
+jalankan-server.bat
+Prompt.md
+README.md
+.vercelignore
+.gitignore
+*.log
+node_modules/
