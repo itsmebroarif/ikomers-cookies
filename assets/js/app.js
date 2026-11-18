@@ -337,7 +337,7 @@ window.IK = (function () {
     ).join("");
 
     mount.innerHTML =
-      '<nav class="site-nav navbar navbar-expand-lg sticky-top">' +
+      '<nav class="site-nav navbar navbar-expand-lg fixed-top">' +
         '<div class="container">' +
           '<a class="navbar-brand d-flex align-items-center gap-2" href="index.html">' +
             '<span class="brand-mark">🍪</span>' +
@@ -408,6 +408,33 @@ window.IK = (function () {
           "</div>" +
         "</div>" +
       "</footer>";
+  }
+
+  /* ---------------- Tinggi navbar ---------------- */
+  // Dipakai untuk offset konten (body padding) dan posisi sticky toolbar produk.
+  // Diukur otomatis agar tetap benar saat navbar membungkus (mobile) atau font selesai dimuat.
+  function syncNavHeight() {
+    const nav = document.querySelector(".site-nav");
+    if (!nav) return;
+    const collapse = byId("mainNav");
+    if (collapse && collapse.classList.contains("show")) return; // jangan ukur saat menu terbuka
+    const h = Math.round(nav.getBoundingClientRect().height);
+    if (h > 0) document.documentElement.style.setProperty("--nav-h", h + "px");
+  }
+
+  function bindNavHeight() {
+    syncNavHeight();
+    window.addEventListener("resize", syncNavHeight);
+    window.addEventListener("orientationchange", syncNavHeight);
+    window.addEventListener("load", syncNavHeight);
+    const collapse = byId("mainNav");
+    if (collapse) {
+      collapse.addEventListener("shown.bs.collapse", syncNavHeight);
+      collapse.addEventListener("hidden.bs.collapse", syncNavHeight);
+    }
+    // jaga-jaga bila font/ikon selesai dimuat setelah render awal
+    setTimeout(syncNavHeight, 350);
+    setTimeout(syncNavHeight, 1200);
   }
 
   /* ---------------- Menu Pesanan (offcanvas) ---------------- */
@@ -563,6 +590,7 @@ window.IK = (function () {
   /* ---------------- Boot ---------------- */
   async function boot() {
     renderNavbar();
+    bindNavHeight();
     renderFooter();
     renderOrderMenu();
     bindGlobal();
@@ -584,6 +612,7 @@ window.IK = (function () {
     esc: esc,
     byId: byId,
     mediaHTML: mediaHTML,
+    syncNavHeight: syncNavHeight,
     toast: toast,
     alertOk: alertOk,
     alertErr: alertErr,

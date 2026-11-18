@@ -40,7 +40,7 @@ tanpa kendala**.
 ### 2.2 Kompatibilitas Vercel
 7. **Semua path bersifat relatif** — tulis `assets/css/style.css`, **bukan** `/assets/css/style.css`.
    Ini membuat situs aman di root domain, preview deployment, maupun sub-path.
-8. **Nama file & folder wajib huruf kecil, tanpa spasi, tanpa karakter khusus.**
+8. **Nama file & folder wajib huruf kecil, tanzpa spasi, tanpa karakter khusus.**
    Vercel berjalan di Linux yang **case-sensitive**; `Style.css` ≠ `style.css` akan error.
 9. **Tidak ada `package.json` dengan `build` script yang bisa gagal.** Situs murni statis.
 10. **Tidak ada file server lokal yang ikut ter-deploy** (`server.js`, `*.bat`) — kecualikan
@@ -123,19 +123,23 @@ Bootstrap 5.3.3, Bootstrap Icons 1.11.3, SweetAlert2 v11, Google Fonts
 (Fraunces untuk judul, Plus Jakarta Sans untuk isi). JavaScript vanilla, ES6.
 
 FITUR WAJIB:
-1. Navbar sticky + badge jumlah item keranjang (dirender oleh app.js).
+1. Navbar fixed-top + badge jumlah item keranjang (dirender oleh app.js). Tinggi navbar
+   diukur otomatis ke CSS variable --nav-h dan dipakai sebagai padding-top body.
 2. Header Product: hero + kartu produk unggulan.
 3. Card Product: foto, badge kategori, badge diskon, rating, terjual, berat, indikator stok.
 4. Order Menu: panel keranjang berupa offcanvas Bootstrap + halaman cart.html.
 5. Add to cart dengan validasi stok, notifikasi SweetAlert2 toast, tersimpan di localStorage.
 6. Sort by category & items: filter kategori, pencarian teks, 8 opsi pengurutan.
-7. Stok dibaca dari data/products.json, otomatis berkurang setelah pesanan dikonfirmasi.
-8. Halaman About: cerita, timeline, nilai, FAQ accordion, kontak, riwayat pesanan.
-9. Checkout wizard 4 langkah: Keranjang → Data Pemesan → Pembayaran → Selesai (struk).
-10. Simulasi pembayaran QRIS (QR digenerate di canvas + countdown 15 menit) dan Cash/tunai.
-11. Struk yang bisa dicetak dan dikirim ke WhatsApp.
-12. Kode promo COOKIE10 (diskon 10%) dan ONGKIRGRATIS.
-13. Tombol "Reset Data Demo" di footer.
+7. Toolbar produk (pencarian + kategori + sortir) full-width & sticky di bawah navbar:
+   saat menempel jadi menu bar beranimasi (kelas .is-stuck + keyframes barDrop), lalu
+   otomatis lepas saat keluar dari section #produk.
+8. Stok dibaca dari data/products.json, otomatis berkurang setelah pesanan dikonfirmasi.
+9. Halaman About: cerita, timeline, nilai, FAQ accordion, kontak, riwayat pesanan.
+10. Checkout wizard 4 langkah: Keranjang → Data Pemesan → Pembayaran → Selesai (struk).
+11. Simulasi pembayaran QRIS (QR digenerate di canvas + countdown 15 menit) dan Cash/tunai.
+12. Struk yang bisa dicetak dan dikirim ke WhatsApp.
+13. Kode promo COOKIE10 (diskon 10%) dan ONGKIRGRATIS.
+14. Tombol "Reset Data Demo" di footer.
 
 ATURAN KERAS (WAJIB DIPATUHI):
 - MURNI FRONTEND. Tanpa backend, tanpa API route, tanpa serverless function, tanpa database,
@@ -280,9 +284,11 @@ image, emoji, tone, tags, featured, description`.
 ## 6. SPESIFIKASI HALAMAN
 
 ### 6.1 Global (dirender `app.js` di semua halaman)
-- **Navbar sticky** — brand `🍪 iKomers / Cookies Artisan`, 4 menu
+- **Navbar fixed-top** — brand `🍪 iKomers / Cookies Artisan`, 4 menu
   (Beranda, Produk → `index.html#produk`, Menu Pesanan, Tentang), dan tombol pil
   "Menu Pesanan" dengan badge jumlah item. Menu aktif ditandai dari `document.body.dataset.page`.
+  Tinggi navbar diukur otomatis oleh `IK.syncNavHeight()` dan ditulis ke CSS variable
+  `--nav-h` (dipakai untuk `body { padding-top }` dan offset elemen sticky).
 - **Footer** — 4 kolom: brand + sosial media, Navigasi, Bantuan, dan blok **Demo Data**
   berisi tombol **Reset Data Demo**. Baris bawah: copyright + tahun otomatis.
 - **Offcanvas "Menu Pesanan"** — daftar item, tombol +/− jumlah, hapus, subtotal,
@@ -291,15 +297,22 @@ image, emoji, tone, tags, featured, description`.
 ### 6.2 `index.html` — Beranda
 1. **Header Product**: badge promo, judul besar, subjudul, 2 CTA (Lihat Menu, Menu Pesanan),
    3 statistik (10 varian / 4.7★ / 7.300+ box), dan **kartu produk unggulan**.
-2. **Toolbar** (sticky di desktop): input pencarian, pill filter kategori (Semua + 5 kategori),
+2. **Toolbar sticky full-width** — input pencarian, pill filter kategori (Semua + 5 kategori),
    dropdown **8 opsi urutan** — Paling Populer, Terbaru, Harga Terendah, Harga Tertinggi,
    Nama A–Z, Nama Z–A, Rating Tertinggi, Stok Terbanyak — plus info jumlah hasil & Reset filter.
+   Toolbar dibungkus `.toolbar-sticky` (anak langsung `#produk`) dengan `position: sticky;
+   top: var(--nav-h)`. Saat menyentuh navbar, `home.js` menambah kelas `.is-stuck` →
+   latar belakang semi-transparan + blur, garis bawah, bayangan, dan animasi `barDrop`
+   (turun halus). Kelas dilepas otomatis saat section `#produk` selesai di-scroll, sehingga
+   toolbar "naik kembali" bersama section-nya. Di layar ≤ 991.98px: susunan jadi satu kolom,
+   pill bisa digeser horizontal, dan baris info disembunyikan saat menempel.
 3. **Grid Card Product** — 4 kolom (desktop), 2 kolom (tablet/HP).
 4. **3 kartu keunggulan** dan **blok About teaser** gelap menuju `about.html`.
 
 ### 6.3 `cart.html` — Menu Pesanan
 - Daftar item dengan thumbnail, harga satuan, stepper jumlah, hapus, subtotal per baris.
-- Panel ringkasan sticky: subtotal, estimasi ongkir, total berat, diskon, total bayar.
+- Panel ringkasan sticky (kelas `.sticky-panel`, `top: calc(var(--nav-h) + 20px)`; nonaktif di layar kecil):
+  subtotal, estimasi ongkir, total berat, diskon, total bayar.
 - Input **kode promo** + tombol Pakai.
 - Tombol **Lanjut ke Checkout** dan **Kosongkan Keranjang**.
 - Empty state bila keranjang kosong.
@@ -340,7 +353,12 @@ dan blok kontak (alamat, jam buka, telepon, email).
 --shadow: 0 10px 30px rgba(70,40,20,.10);
 --shadow-lg: 0 22px 55px rgba(70,40,20,.18);
 --radius: 20px;
+--nav-h: 76px;          /* tinggi navbar fixed; diukur ulang oleh app.js */
 ```
+- **`body { padding-top: var(--nav-h); overflow-x: clip; }`** — `padding-top` memberi ruang
+  untuk navbar fixed; `overflow-x: clip` (bukan `hidden`) dipakai agar `position: sticky`
+  di dalam tetap bekerja. Tambahkan `scroll-margin-top: calc(var(--nav-h) + 12px)` pada
+  `#produk, #faq, #kontak, #riwayat` agar anchor tidak tertutup navbar.
 - Judul: **Fraunces** (serif). Isi: **Plus Jakarta Sans**.
 - Tombol utama `.btn-cookie`: gradien karamel, teks putih, `border-radius: 999px`,
   bayangan hangat, efek naik saat hover.

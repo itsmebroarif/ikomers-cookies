@@ -10,11 +10,12 @@ dan **SweetAlert2** untuk notifikasi/dialog.
 
 | Fitur | Keterangan |
 |---|---|
-| **Navbar** | Sticky, responsif, badge jumlah item di keranjang, di-render otomatis oleh `app.js` |
+| **Navbar** | **Fixed top** (selalu menempel di atas), responsif, badge jumlah item di keranjang, di-render otomatis oleh `app.js` |
 | **Header Product** | Hero section + kartu produk unggulan (pilihan editor) |
 | **Card Product** | 10 varian cookies: **foto asli**, nama, deskripsi, harga, harga coret, rating, jumlah terjual, berat, indikator stok |
 | **Order Menu** | Panel keranjang (offcanvas) yang bisa dibuka dari mana saja + halaman `cart.html` |
 | **Add to Cart** | Validasi stok otomatis, notifikasi toast, keranjang tersimpan di `localStorage` |
+| **Toolbar Sticky Beranimasi** | Pencarian + kategori + sortir full-width yang otomatis "menempel" jadi menu bar di bawah navbar saat di-scroll, lalu lepas kembali saat keluar dari section produk |
 | **Sort by Category & Items** | Filter kategori, pencarian nama, dan 8 opsi pengurutan (populer, terbaru, harga, nama A–Z, rating, stok) |
 | **Stok dari JSON** | Semua data produk & stok berasal dari `data/products.json` |
 | **About** | Halaman cerita, nilai, timeline, FAQ (accordion), kontak, dan riwayat pesanan |
@@ -180,6 +181,18 @@ Seluruh tema memakai CSS variable di bagian atas **`assets/css/style.css`**:
 
 ### 5. Menambah / mengubah menu navbar
 Edit array `NAV` di **`assets/js/app.js`** — otomatis berlaku di semua halaman.
+
+### 6. Mengatur navbar fixed & toolbar sticky
+- **Navbar** memakai kelas Bootstrap `fixed-top`. Tingginya diukur otomatis oleh
+  `IK.syncNavHeight()` (`app.js`) dan disimpan ke CSS variable `--nav-h`, sehingga
+  konten tidak pernah tertutup navbar meski tingginya berubah (mis. di HP).
+- **Toolbar produk** (pencarian + kategori + sortir) dibungkus `.toolbar-sticky`
+  yang `position: sticky` di bawah navbar. Saat menyentuh navbar, `home.js`
+  menambahkan kelas `.is-stuck` → latar belakang, bayangan, dan animasi
+  `barDrop` muncul (jadi "menu bar"). Kelas dilepas otomatis begitu section
+  `#produk` selesai di-scroll.
+- Ingin mengubah jarak/offset? Cukup ubah nilai `--nav-h` di `:root`
+  (`assets/css/style.css`) — nilai asli akan ditimpa hasil pengukuran otomatis.
 
 ---
 

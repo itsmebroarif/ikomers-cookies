@@ -53,54 +53,58 @@
 
   <main>
     <!-- ================= CARD PRODUCT ================= -->
-    <section id="produk" class="container py-5">
-      <div class="text-center mb-4">
-        <div class="section-eyebrow">Menu Kami</div>
-        <h2 class="section-title mb-2">Pilih cookies favoritmu</h2>
-        <p class="text-muted-2 mb-0">Filter berdasarkan kategori, cari nama produk, atau urutkan sesuai keinginanmu.</p>
+    <section id="produk" class="product-section py-5">
+      <div class="container">
+        <div class="text-center mb-4">
+          <div class="section-eyebrow">Menu Kami</div>
+          <h2 class="section-title mb-2">Pilih cookies favoritmu</h2>
+          <p class="text-muted-2 mb-0">Filter berdasarkan kategori, cari nama produk, atau urutkan sesuai keinginanmu.</p>
+        </div>
+
+        <div id="dataNote" class="alert alert-warning py-2 small d-none mb-3" role="alert"></div>
       </div>
 
-      <div id="dataNote" class="alert alert-warning py-2 small d-none mb-3" role="alert"></div>
-
-      <!-- Toolbar: pencarian, kategori, sortir -->
-      <div class="toolbar mb-4">
-        <div class="row g-3 align-items-center">
-          <div class="col-lg-4">
-            <div class="input-group">
-              <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted-2"></i></span>
-              <input type="search" id="searchInput" class="form-control border-start-0" placeholder="Cari cookies…" aria-label="Cari produk">
+      <!-- Toolbar: pencarian, kategori, sortir — sticky full-width, lepas saat keluar section -->
+      <div class="toolbar-sticky" id="toolbarSticky">
+        <div class="container">
+          <div class="toolbar-main">
+            <div class="toolbar-search">
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search text-muted-2"></i></span>
+                <input type="search" id="searchInput" class="form-control" placeholder="Cari cookies…" aria-label="Cari produk">
+              </div>
+            </div>
+            <div class="toolbar-pills" id="categoryFilter"><!-- diisi home.js --></div>
+            <div class="toolbar-sort">
+              <select id="sortBy" class="form-select" aria-label="Urutkan produk">
+                <option value="populer">Urutkan: Paling Populer</option>
+                <option value="terbaru">Urutkan: Terbaru</option>
+                <option value="harga-asc">Urutkan: Harga Terendah</option>
+                <option value="harga-desc">Urutkan: Harga Tertinggi</option>
+                <option value="nama-asc">Urutkan: Nama A–Z</option>
+                <option value="nama-desc">Urutkan: Nama Z–A</option>
+                <option value="rating-desc">Urutkan: Rating Tertinggi</option>
+                <option value="stok-desc">Urutkan: Stok Terbanyak</option>
+              </select>
             </div>
           </div>
-          <div class="col-lg-5">
-            <div class="pill-group" id="categoryFilter"><!-- diisi home.js --></div>
+          <div class="toolbar-foot">
+            <small class="text-muted-2" id="resultInfo"></small>
+            <button class="btn btn-sm btn-link text-decoration-none text-caramel fw-bold" id="clearFilter">
+              <i class="bi bi-arrow-counterclockwise me-1"></i>Reset filter
+            </button>
           </div>
-          <div class="col-lg-3">
-            <select id="sortBy" class="form-select" aria-label="Urutkan produk">
-              <option value="populer">Urutkan: Paling Populer</option>
-              <option value="terbaru">Urutkan: Terbaru</option>
-              <option value="harga-asc">Urutkan: Harga Terendah</option>
-              <option value="harga-desc">Urutkan: Harga Tertinggi</option>
-              <option value="nama-asc">Urutkan: Nama A–Z</option>
-              <option value="nama-desc">Urutkan: Nama Z–A</option>
-              <option value="rating-desc">Urutkan: Rating Tertinggi</option>
-              <option value="stok-desc">Urutkan: Stok Terbanyak</option>
-            </select>
-          </div>
-        </div>
-        <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
-          <small class="text-muted-2" id="resultInfo"></small>
-          <button class="btn btn-sm btn-link text-decoration-none text-caramel fw-bold" id="clearFilter">
-            <i class="bi bi-arrow-counterclockwise me-1"></i>Reset filter
-          </button>
         </div>
       </div>
 
       <!-- Grid produk -->
-      <div class="row g-4" id="productGrid">
-        <div class="col-6 col-lg-4 col-xxl-3"><div class="skeleton" style="height:360px"></div></div>
-        <div class="col-6 col-lg-4 col-xxl-3"><div class="skeleton" style="height:360px"></div></div>
-        <div class="col-6 col-lg-4 col-xxl-3"><div class="skeleton" style="height:360px"></div></div>
-        <div class="col-6 col-lg-4 col-xxl-3"><div class="skeleton" style="height:360px"></div></div>
+      <div class="container mt-4">
+        <div class="row g-4" id="productGrid">
+          <div class="col-6 col-lg-4 col-xxl-3"><div class="skeleton" style="height:360px"></div></div>
+          <div class="col-6 col-lg-4 col-xxl-3"><div class="skeleton" style="height:360px"></div></div>
+          <div class="col-6 col-lg-4 col-xxl-3"><div class="skeleton" style="height:360px"></div></div>
+          <div class="col-6 col-lg-4 col-xxl-3"><div class="skeleton" style="height:360px"></div></div>
+        </div>
       </div>
     </section>
 

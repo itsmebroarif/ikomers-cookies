@@ -314,6 +314,55 @@
     });
   }
 
+  /* ---------- Toolbar sticky (animasi menu bar) ---------- */
+  function initStickyToolbar() {
+    const bar = byId("toolbarSticky");
+    const section = byId("produk");
+    if (!bar || !section) return;
+
+    let navH = 0;
+
+    function readNavH() {
+      navH =
+        parseFloat(
+          getComputedStyle(document.documentElement).getPropertyValue("--nav-h")
+        ) || 0;
+    }
+
+    function update() {
+      const barRect = bar.getBoundingClientRect();
+      const sectionRect = section.getBoundingClientRect();
+      // Menempel = toolbar sudah menyentuh bawah navbar TAPI section produk
+      // belum habis (masih ada produk di bawah toolbar).
+      const stuck =
+        barRect.top <= navH + 1 &&
+        sectionRect.bottom > navH + barRect.height + 1;
+      bar.classList.toggle("is-stuck", stuck);
+    }
+
+    // Hitung langsung (bukan lewat requestAnimationFrame) agar tetap akurat
+    // walau tab sedang tidak aktif / rAF di-throttle browser.
+    function onScroll() {
+      update();
+    }
+
+    function remeasure() {
+      if (IK.syncNavHeight) IK.syncNavHeight();
+      readNavH();
+      update();
+    }
+
+    readNavH();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", remeasure);
+    window.addEventListener("orientationchange", remeasure);
+    window.addEventListener("load", remeasure);
+    // Ukur ulang setelah navbar stabil (font/ikon selesai dimuat)
+    setTimeout(remeasure, 400);
+    setTimeout(remeasure, 1200);
+    update();
+  }
+
   /* ---------- Start ---------- */
   IK.boot().then(() => {
     if (IK.usedFallback) {
@@ -329,5 +378,6 @@
     renderCategories();
     renderGrid();
     bind();
+    initStickyToolbar();
   });
 })();
